@@ -1,0 +1,2383 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الماس - فروشگاه لوازم خانگی</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            box-sizing: border-box;
+            font-family: 'Tahoma', sans-serif;
+        }
+        
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        @keyframes shimmer {
+            0% { background-position: -200px 0; }
+            100% { background-position: calc(200px + 100%) 0; }
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .animate-fadeInUp { animation: fadeInUp 0.8s ease-out; }
+        .animate-slideInRight { animation: slideInRight 0.6s ease-out; }
+        .animate-bounce-custom { animation: bounce 2s infinite; }
+        .animate-pulse-custom { animation: pulse 2s infinite; }
+        .animate-shimmer { animation: shimmer 2s infinite; }
+        .animate-rotate { animation: rotate 2s linear infinite; }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        .shimmer-effect {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200px 100%;
+        }
+        
+        .page {
+            display: none;
+        }
+        
+        .page.active {
+            display: block;
+        }
+        
+        .modal {
+            display: none;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            max-width: calc(100vw - 40px);
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .cart-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #ef4444;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        /* Mobile Navigation */
+        .mobile-menu {
+            display: block;
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100vh;
+            background: white;
+            z-index: 1000;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        }
+        
+        .mobile-menu.active {
+            display: block;
+            transform: translateX(0);
+        }
+        
+        .mobile-menu-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+        }
+        
+        .mobile-menu-overlay.active {
+            display: block;
+        }
+        
+        /* Mobile Responsive Styles */
+        @media (max-width: 768px) {
+            .card-hover:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            }
+            
+            .notification {
+                right: 10px;
+                left: 10px;
+                transform: translateY(-100px);
+                max-width: none;
+            }
+            
+            .notification.show {
+                transform: translateY(0);
+            }
+            
+            /* Hide desktop navigation on mobile */
+            .desktop-nav {
+                display: none !important;
+            }
+            
+            /* Mobile search adjustments */
+            .mobile-search {
+                width: 100%;
+                margin-bottom: 1rem;
+            }
+            
+            /* Mobile modal adjustments */
+            .modal .bg-white {
+                margin: 1rem;
+                max-height: calc(100vh - 2rem);
+                overflow-y: auto;
+            }
+            
+            /* Mobile product grid */
+            .mobile-product-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 0.75rem !important;
+            }
+            
+            /* Mobile product cards */
+            .mobile-product-card .p-6 {
+                padding: 1rem !important;
+            }
+            
+            .mobile-product-card h3 {
+                font-size: 0.9rem !important;
+                line-height: 1.2 !important;
+            }
+            
+            .mobile-product-card p {
+                font-size: 0.8rem !important;
+                margin-bottom: 0.5rem !important;
+            }
+            
+            /* Mobile buttons */
+            .mobile-btn-group {
+                flex-direction: column !important;
+                gap: 0.5rem !important;
+            }
+            
+            .mobile-btn-group button {
+                width: 100% !important;
+                padding: 0.5rem !important;
+                font-size: 0.8rem !important;
+            }
+            
+            /* Mobile hero section */
+            .mobile-hero h1 {
+                font-size: 2rem !important;
+                line-height: 1.2 !important;
+            }
+            
+            .mobile-hero p {
+                font-size: 1rem !important;
+            }
+            
+            /* Mobile features grid */
+            .mobile-features {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 1rem !important;
+            }
+            
+            /* Mobile cart items */
+            .mobile-cart-item {
+                flex-direction: column !important;
+                align-items: flex-start !important;
+                gap: 1rem !important;
+            }
+            
+            .mobile-cart-controls {
+                width: 100% !important;
+                justify-content: space-between !important;
+            }
+            
+            /* Mobile product detail */
+            .mobile-product-detail {
+                grid-template-columns: 1fr !important;
+                gap: 1.5rem !important;
+            }
+            
+            .mobile-product-tabs {
+                overflow-x: auto !important;
+                white-space: nowrap !important;
+            }
+            
+            .mobile-product-tabs button {
+                min-width: 120px !important;
+            }
+            
+            /* Mobile similar products */
+            .mobile-similar-products {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 0.75rem !important;
+            }
+            
+            /* Mobile footer */
+            .mobile-footer {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 2rem !important;
+            }
+            
+            /* Mobile form adjustments */
+            .mobile-form-grid {
+                grid-template-columns: 1fr !important;
+            }
+            
+            /* Mobile checkout */
+            .mobile-checkout {
+                grid-template-columns: 1fr !important;
+            }
+            
+            /* Mobile blog grid */
+            .mobile-blog-grid {
+                grid-template-columns: 1fr !important;
+                gap: 1.5rem !important;
+            }
+            
+            /* Mobile brands grid */
+            .mobile-brands-grid {
+                grid-template-columns: repeat(3, 1fr) !important;
+                gap: 1rem !important;
+            }
+            
+            /* Mobile offers adjustments */
+            .mobile-offers-grid {
+                grid-template-columns: 1fr !important;
+                gap: 1rem !important;
+            }
+            
+            .mobile-bundle-grid {
+                grid-template-columns: 1fr !important;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            /* Extra small mobile adjustments */
+            .mobile-product-grid {
+                grid-template-columns: 1fr !important;
+            }
+            
+            .mobile-features {
+                grid-template-columns: 1fr !important;
+            }
+            
+            .mobile-similar-products {
+                grid-template-columns: 1fr !important;
+            }
+            
+            .mobile-brands-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+            }
+            
+            .mobile-hero h1 {
+                font-size: 1.5rem !important;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Notification -->
+    <div id="notification" class="notification bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg">
+        <span id="notificationText">محصول به سبد خرید اضافه شد!</span>
+    </div>
+
+    <!-- Mobile Menu Overlay -->
+    <div id="mobileMenuOverlay" class="mobile-menu-overlay" onclick="closeMobileMenu()"></div>
+    
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="mobile-menu">
+        <div class="p-4">
+            <div class="flex justify-between items-center mb-6">
+                <div class="text-xl font-bold text-purple-600">💎 الماس</div>
+                <button onclick="closeMobileMenu()" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            
+            <!-- Mobile Search -->
+            <div class="relative mb-6">
+                <input type="text" id="mobileSearchInput" placeholder="جستجو..." class="w-full bg-gray-100 rounded-full px-4 py-3 pr-10 focus:outline-none focus:ring-2 focus:ring-purple-500" onkeyup="handleMobileSearch(event)">
+                <i class="fas fa-search absolute right-3 top-4 text-gray-400"></i>
+            </div>
+            
+            <!-- Mobile Navigation Links -->
+            <nav class="space-y-4">
+                <a href="#" onclick="showPage('home'); closeMobileMenu();" class="flex items-center py-3 px-4 text-gray-700 hover:bg-purple-50 hover:text-purple-600 rounded-lg transition-colors">
+                    <i class="fas fa-home text-lg w-6 text-center ml-3"></i>
+                    <span>خانه</span>
+                </a>
+                <a href="#" onclick="showPage('products'); closeMobileMenu();" class="flex items-center py-3 px-4 text-gray-700 hover:bg-purple-50 hover:text-purple-600 rounded-lg transition-colors">
+                    <i class="fas fa-box text-lg w-6 text-center ml-3"></i>
+                    <span>محصولات</span>
+                </a>
+                <a href="#" onclick="showPage('categories'); closeMobileMenu();" class="flex items-center py-3 px-4 text-gray-700 hover:bg-purple-50 hover:text-purple-600 rounded-lg transition-colors">
+                    <i class="fas fa-th-large text-lg w-6 text-center ml-3"></i>
+                    <span>دسته‌بندی</span>
+                </a>
+                <a href="#" onclick="showPage('brands'); closeMobileMenu();" class="flex items-center py-3 px-4 text-gray-700 hover:bg-purple-50 hover:text-purple-600 rounded-lg transition-colors">
+                    <i class="fas fa-star text-lg w-6 text-center ml-3"></i>
+                    <span>برندها</span>
+                </a>
+                <a href="#" onclick="showPage('offers'); closeMobileMenu();" class="flex items-center py-3 px-4 text-gray-700 hover:bg-purple-50 hover:text-purple-600 rounded-lg transition-colors">
+                    <i class="fas fa-fire text-lg w-6 text-center ml-3"></i>
+                    <span>پیشنهادات</span>
+                </a>
+                <a href="#" onclick="showPage('blog'); closeMobileMenu();" class="flex items-center py-3 px-4 text-gray-700 hover:bg-purple-50 hover:text-purple-600 rounded-lg transition-colors">
+                    <i class="fas fa-newspaper text-lg w-6 text-center ml-3"></i>
+                    <span>وبلاگ</span>
+                </a>
+                <a href="#" onclick="showPage('about'); closeMobileMenu();" class="flex items-center py-3 px-4 text-gray-700 hover:bg-purple-50 hover:text-purple-600 rounded-lg transition-colors">
+                    <i class="fas fa-info-circle text-lg w-6 text-center ml-3"></i>
+                    <span>درباره ما</span>
+                </a>
+                <a href="#" onclick="showPage('contact'); closeMobileMenu();" class="flex items-center py-3 px-4 text-gray-700 hover:bg-purple-50 hover:text-purple-600 rounded-lg transition-colors">
+                    <i class="fas fa-phone text-lg w-6 text-center ml-3"></i>
+                    <span>تماس</span>
+                </a>
+            </nav>
+            
+            <!-- Mobile Login Button -->
+            <div class="mt-6 pt-6 border-t border-gray-200">
+                <button onclick="showModal('loginModal'); closeMobileMenu();" class="w-full bg-purple-600 text-white py-3 rounded-lg hover:bg-purple-700 transition-colors">
+                    <i class="fas fa-user ml-2"></i>ورود / ثبت نام
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="bg-white shadow-lg sticky top-0 z-50">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between py-4">
+                <div class="flex items-center space-x-4 space-x-reverse">
+                    <div class="text-2xl font-bold text-purple-600 animate-pulse-custom">
+                        💎 الماس
+                    </div>
+                    <nav class="desktop-nav hidden md:flex space-x-6 space-x-reverse">
+                        <a href="#" onclick="showPage('home')" class="text-gray-700 hover:text-purple-600 transition-colors">خانه</a>
+                        <a href="#" onclick="showPage('products')" class="text-gray-700 hover:text-purple-600 transition-colors">محصولات</a>
+                        <a href="#" onclick="showPage('categories')" class="text-gray-700 hover:text-purple-600 transition-colors">دسته‌بندی</a>
+                        <a href="#" onclick="showPage('brands')" class="text-gray-700 hover:text-purple-600 transition-colors">برندها</a>
+                        <a href="#" onclick="showPage('offers')" class="text-gray-700 hover:text-purple-600 transition-colors">پیشنهادات</a>
+                        <a href="#" onclick="showPage('blog')" class="text-gray-700 hover:text-purple-600 transition-colors">وبلاگ</a>
+                        <a href="#" onclick="showPage('about')" class="text-gray-700 hover:text-purple-600 transition-colors">درباره ما</a>
+                        <a href="#" onclick="showPage('contact')" class="text-gray-700 hover:text-purple-600 transition-colors">تماس</a>
+                    </nav>
+                </div>
+                
+                <div class="flex items-center space-x-4 space-x-reverse">
+                    <!-- Desktop Search -->
+                    <div class="relative hidden md:block">
+                        <input type="text" id="searchInput" placeholder="جستجو..." class="bg-gray-100 rounded-full px-4 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-purple-500" onkeyup="handleSearch(event)">
+                        <i class="fas fa-search absolute right-3 top-3 text-gray-400"></i>
+                    </div>
+                    
+                    <div class="flex space-x-2 space-x-reverse">
+                        <!-- Desktop Login Button -->
+                        <button onclick="showModal('loginModal')" class="hidden md:flex bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors">
+                            <i class="fas fa-user ml-2"></i>ورود
+                        </button>
+                        
+                        <!-- Cart Button -->
+                        <button onclick="showPage('cart')" class="relative bg-gray-100 p-3 rounded-lg hover:bg-gray-200 transition-colors">
+                            <i class="fas fa-shopping-cart text-gray-700"></i>
+                            <span id="cartBadge" class="cart-badge">0</span>
+                        </button>
+                        
+                        <!-- Mobile Menu Button -->
+                        <button onclick="openMobileMenu()" class="mobile-menu-btn block md:hidden bg-gray-100 p-3 rounded-lg hover:bg-gray-200 transition-colors">
+                            <i class="fas fa-bars text-gray-700"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Mobile Search (below header on mobile) -->
+            <div class="md:hidden pb-4">
+                <div class="relative">
+                    <input type="text" id="mobileHeaderSearch" placeholder="جستجو در محصولات..." class="w-full bg-gray-100 rounded-full px-4 py-3 pr-10 focus:outline-none focus:ring-2 focus:ring-purple-500" onkeyup="handleSearch(event)">
+                    <i class="fas fa-search absolute right-3 top-4 text-gray-400"></i>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Home Page -->
+    <div id="homePage" class="page active">
+        <!-- Hero Section -->
+        <section class="gradient-bg text-white py-12 md:py-20">
+            <div class="container mx-auto px-4 text-center mobile-hero">
+                <h1 class="text-3xl md:text-5xl font-bold mb-4 md:mb-6 animate-fadeInUp">
+                    به فروشگاه الماس خوش آمدید
+                </h1>
+                <p class="text-lg md:text-xl mb-6 md:mb-8 animate-fadeInUp px-4" style="animation-delay: 0.2s;">
+                    بهترین لوازم خانگی با کیفیت برتر و قیمت مناسب
+                </p>
+                <button onclick="showPage('products')" class="bg-white text-purple-600 px-6 md:px-8 py-3 rounded-full font-bold hover:bg-gray-100 transition-colors animate-bounce-custom">
+                    مشاهده محصولات
+                </button>
+            </div>
+        </section>
+
+        <!-- Features -->
+        <section class="py-8 md:py-16">
+            <div class="container mx-auto px-4">
+                <h2 class="text-2xl md:text-3xl font-bold text-center mb-8 md:mb-12">چرا الماس؟</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 mobile-features">
+                    <div class="text-center card-hover bg-white p-6 md:p-8 rounded-xl shadow-lg animate-fadeInUp">
+                        <div class="text-3xl md:text-4xl mb-3 md:mb-4 animate-bounce-custom">🚚</div>
+                        <h3 class="text-lg md:text-xl font-bold mb-2 md:mb-4">ارسال رایگان</h3>
+                        <p class="text-gray-600 text-sm md:text-base">ارسال رایگان برای خریدهای بالای ۵۰۰ هزار تومان</p>
+                    </div>
+                    
+                    <div class="text-center card-hover bg-white p-6 md:p-8 rounded-xl shadow-lg animate-fadeInUp" style="animation-delay: 0.2s;">
+                        <div class="text-3xl md:text-4xl mb-3 md:mb-4 animate-pulse-custom">🛡️</div>
+                        <h3 class="text-lg md:text-xl font-bold mb-2 md:mb-4">گارانتی معتبر</h3>
+                        <p class="text-gray-600 text-sm md:text-base">تمام محصولات دارای گارانتی معتبر و خدمات پس از فروش</p>
+                    </div>
+                    
+                    <div class="text-center card-hover bg-white p-6 md:p-8 rounded-xl shadow-lg animate-fadeInUp sm:col-span-2 lg:col-span-1" style="animation-delay: 0.4s;">
+                        <div class="text-3xl md:text-4xl mb-3 md:mb-4 animate-rotate">⭐</div>
+                        <h3 class="text-lg md:text-xl font-bold mb-2 md:mb-4">کیفیت برتر</h3>
+                        <p class="text-gray-600 text-sm md:text-base">انتخاب بهترین برندهای معتبر دنیا</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Featured Products -->
+        <section class="py-8 md:py-16 bg-gray-100">
+            <div class="container mx-auto px-4">
+                <h2 class="text-2xl md:text-3xl font-bold text-center mb-8 md:mb-12">محصولات ویژه</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mobile-product-grid" id="featuredProducts">
+                    <!-- Products will be loaded here -->
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Products Page -->
+    <div id="productsPage" class="page">
+        <div class="container mx-auto px-4 py-6 md:py-8">
+            <div class="flex flex-col md:flex-row md:justify-between md:items-center mb-6 md:mb-8 space-y-4 md:space-y-0">
+                <h1 class="text-2xl md:text-3xl font-bold">محصولات</h1>
+                <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 sm:space-x-reverse">
+                    <select class="border rounded-lg px-3 py-2 text-sm md:text-base">
+                        <option>مرتب‌سازی بر اساس</option>
+                        <option>قیمت کم به زیاد</option>
+                        <option>قیمت زیاد به کم</option>
+                        <option>جدیدترین</option>
+                    </select>
+                    <select class="border rounded-lg px-3 py-2 text-sm md:text-base" onchange="filterProducts(this.value)">
+                        <option value="">همه دسته‌ها</option>
+                        <option value="kitchen">آشپزخانه</option>
+                        <option value="cleaning">نظافت</option>
+                        <option value="electronics">الکترونیک</option>
+                        <option value="home">خانه و باغ</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mobile-product-grid" id="allProducts">
+                <!-- Products will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Categories Page -->
+    <div id="categoriesPage" class="page">
+        <div class="container mx-auto px-4 py-6 md:py-8">
+            <h1 class="text-2xl md:text-3xl font-bold mb-6 md:mb-8">دسته‌بندی محصولات</h1>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+                <div class="card-hover bg-white rounded-xl shadow-lg overflow-hidden">
+                    <div class="h-48 bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center">
+                        <div class="text-6xl animate-bounce-custom">🍳</div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2">لوازم آشپزخانه</h3>
+                        <p class="text-gray-600 mb-4">تجهیزات کامل آشپزخانه</p>
+                        <button onclick="filterProducts('kitchen'); showPage('products')" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                            مشاهده محصولات
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="card-hover bg-white rounded-xl shadow-lg overflow-hidden">
+                    <div class="h-48 bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center">
+                        <div class="text-6xl animate-pulse-custom">🧽</div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2">لوازم نظافت</h3>
+                        <p class="text-gray-600 mb-4">ابزارهای نظافت خانه</p>
+                        <button onclick="filterProducts('cleaning'); showPage('products')" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors">
+                            مشاهده محصولات
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="card-hover bg-white rounded-xl shadow-lg overflow-hidden">
+                    <div class="h-48 bg-gradient-to-br from-purple-400 to-purple-600 flex items-center justify-center">
+                        <div class="text-6xl animate-rotate">📱</div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2">لوازم الکترونیک</h3>
+                        <p class="text-gray-600 mb-4">دستگاه‌های هوشمند خانگی</p>
+                        <button onclick="filterProducts('electronics'); showPage('products')" class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors">
+                            مشاهده محصولات
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="card-hover bg-white rounded-xl shadow-lg overflow-hidden">
+                    <div class="h-48 bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center">
+                        <div class="text-6xl animate-bounce-custom">🏠</div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2">خانه و باغ</h3>
+                        <p class="text-gray-600 mb-4">تجهیزات هوشمند خانگی</p>
+                        <button onclick="filterProducts('home'); showPage('products')" class="bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700 transition-colors">
+                            مشاهده محصولات
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cart Page -->
+    <div id="cartPage" class="page">
+        <div class="container mx-auto px-4 py-6 md:py-8">
+            <h1 class="text-2xl md:text-3xl font-bold mb-6 md:mb-8">سبد خرید</h1>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="lg:col-span-2">
+                    <div id="cartItems" class="space-y-4">
+                        <!-- Cart items will be loaded here -->
+                    </div>
+                </div>
+                
+                <div class="bg-white p-4 md:p-6 rounded-xl shadow-lg h-fit">
+                    <h3 class="text-lg md:text-xl font-bold mb-4">خلاصه سفارش</h3>
+                    <div class="space-y-2 mb-4 text-sm md:text-base">
+                        <div class="flex justify-between">
+                            <span>جمع کل:</span>
+                            <span id="subtotal">۰ تومان</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>هزینه ارسال:</span>
+                            <span id="shipping">۳۰,۰۰۰ تومان</span>
+                        </div>
+                        <hr>
+                        <div class="flex justify-between font-bold text-base md:text-lg">
+                            <span>مجموع:</span>
+                            <span id="total">۰ تومان</span>
+                        </div>
+                    </div>
+                    <button onclick="showModal('checkoutModal')" class="w-full bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition-colors text-sm md:text-base">
+                        تکمیل خرید
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- About Page -->
+    <div id="aboutPage" class="page">
+        <div class="container mx-auto px-4 py-8">
+            <div class="max-w-4xl mx-auto">
+                <h1 class="text-4xl font-bold text-center mb-8 animate-fadeInUp">درباره الماس</h1>
+                
+                <div class="bg-white rounded-xl shadow-lg p-8 mb-8 animate-slideInRight">
+                    <p class="text-lg leading-relaxed mb-6">
+                        فروشگاه الماس با بیش از ۱۰ سال تجربه در زمینه فروش لوازم خانگی، به عنوان یکی از معتبرترین فروشگاه‌های آنلاین ایران شناخته می‌شود. ما با ارائه محصولات باکیفیت و خدمات مطلوب، رضایت مشتریان را در اولویت قرار داده‌ایم.
+                    </p>
+                    
+                    <div class="grid md:grid-cols-2 gap-8 mt-8">
+                        <div class="text-center">
+                            <div class="text-4xl mb-4 animate-bounce-custom">🎯</div>
+                            <h3 class="text-xl font-bold mb-2">ماموریت ما</h3>
+                            <p class="text-gray-600">ارائه بهترین لوازم خانگی با کیفیت برتر و قیمت مناسب</p>
+                        </div>
+                        
+                        <div class="text-center">
+                            <div class="text-4xl mb-4 animate-pulse-custom">👁️</div>
+                            <h3 class="text-xl font-bold mb-2">چشم‌انداز ما</h3>
+                            <p class="text-gray-600">پیشرو در صنعت فروش آنلاین لوازم خانگی در ایران</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div class="bg-blue-50 p-6 rounded-xl text-center card-hover">
+                        <div class="text-3xl font-bold text-blue-600 mb-2">۱۰+</div>
+                        <p class="text-gray-700">سال تجربه</p>
+                    </div>
+                    
+                    <div class="bg-green-50 p-6 rounded-xl text-center card-hover">
+                        <div class="text-3xl font-bold text-green-600 mb-2">۱۰۰۰+</div>
+                        <p class="text-gray-700">محصول متنوع</p>
+                    </div>
+                    
+                    <div class="bg-purple-50 p-6 rounded-xl text-center card-hover">
+                        <div class="text-3xl font-bold text-purple-600 mb-2">۵۰۰۰+</div>
+                        <p class="text-gray-700">مشتری راضی</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Brands Page -->
+    <div id="brandsPage" class="page">
+        <div class="container mx-auto px-4 py-8">
+            <h1 class="text-3xl font-bold text-center mb-8">برندهای معتبر</h1>
+            
+            <div class="grid md:grid-cols-6 gap-6 mb-12">
+                <div class="bg-white p-6 rounded-xl shadow-lg text-center card-hover">
+                    <div class="text-4xl mb-4">🏢</div>
+                    <h3 class="font-bold">سامسونگ</h3>
+                </div>
+                
+                <div class="bg-white p-6 rounded-xl shadow-lg text-center card-hover">
+                    <div class="text-4xl mb-4">🏭</div>
+                    <h3 class="font-bold">ال جی</h3>
+                </div>
+                
+                <div class="bg-white p-6 rounded-xl shadow-lg text-center card-hover">
+                    <div class="text-4xl mb-4">🏪</div>
+                    <h3 class="font-bold">بوش</h3>
+                </div>
+                
+                <div class="bg-white p-6 rounded-xl shadow-lg text-center card-hover">
+                    <div class="text-4xl mb-4">🏬</div>
+                    <h3 class="font-bold">فیلیپس</h3>
+                </div>
+                
+                <div class="bg-white p-6 rounded-xl shadow-lg text-center card-hover">
+                    <div class="text-4xl mb-4">🏢</div>
+                    <h3 class="font-bold">پارس خزر</h3>
+                </div>
+                
+                <div class="bg-white p-6 rounded-xl shadow-lg text-center card-hover">
+                    <div class="text-4xl mb-4">🏭</div>
+                    <h3 class="font-bold">اخوان</h3>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow-lg p-8">
+                <h2 class="text-2xl font-bold mb-6">چرا برندهای معتبر؟</h2>
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div class="text-center">
+                        <div class="text-4xl mb-4 animate-pulse-custom">✅</div>
+                        <h3 class="font-bold mb-2">کیفیت تضمینی</h3>
+                        <p class="text-gray-600">تمام محصولات دارای کیفیت بین‌المللی</p>
+                    </div>
+                    
+                    <div class="text-center">
+                        <div class="text-4xl mb-4 animate-bounce-custom">🛡️</div>
+                        <h3 class="font-bold mb-2">گارانتی معتبر</h3>
+                        <p class="text-gray-600">گارانتی رسمی و خدمات پس از فروش</p>
+                    </div>
+                    
+                    <div class="text-center">
+                        <div class="text-4xl mb-4 animate-rotate">⭐</div>
+                        <h3 class="font-bold mb-2">اعتماد مشتریان</h3>
+                        <p class="text-gray-600">سال‌ها تجربه و رضایت مشتریان</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Offers Page -->
+    <div id="offersPage" class="page">
+        <div class="container mx-auto px-4 py-8">
+            <h1 class="text-3xl font-bold text-center mb-8">پیشنهادات ویژه</h1>
+            
+            <!-- Special Banner -->
+            <div class="bg-gradient-to-r from-red-500 to-pink-500 text-white rounded-xl p-8 mb-8 text-center animate-pulse-custom">
+                <h2 class="text-3xl font-bold mb-4">🔥 فروش ویژه هفته 🔥</h2>
+                <p class="text-xl mb-4">تا ۵۰٪ تخفیف روی محصولات منتخب</p>
+                <div class="text-lg">⏰ تا پایان هفته فرصت باقی مانده</div>
+            </div>
+            
+            <!-- Flash Sale -->
+            <div class="mb-8">
+                <h2 class="text-2xl font-bold mb-6 flex items-center">
+                    <span class="animate-bounce-custom ml-2">⚡</span>
+                    فروش فوری
+                </h2>
+                <div class="grid md:grid-cols-4 gap-6" id="flashSaleProducts">
+                    <!-- Flash sale products will be loaded here -->
+                </div>
+            </div>
+            
+            <!-- Daily Deals -->
+            <div class="mb-8">
+                <h2 class="text-2xl font-bold mb-6 flex items-center">
+                    <span class="animate-pulse-custom ml-2">🎯</span>
+                    پیشنهاد روز
+                </h2>
+                <div class="grid md:grid-cols-3 gap-6" id="dailyDeals">
+                    <!-- Daily deals will be loaded here -->
+                </div>
+            </div>
+            
+            <!-- Bundle Offers -->
+            <div>
+                <h2 class="text-2xl font-bold mb-6 flex items-center">
+                    <span class="animate-rotate ml-2">📦</span>
+                    پکیج‌های ویژه
+                </h2>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="bg-white rounded-xl shadow-lg p-6 card-hover">
+                        <h3 class="text-xl font-bold mb-4">پکیج آشپزخانه کامل</h3>
+                        <div class="space-y-2 mb-4">
+                            <div class="flex justify-between">
+                                <span>یخچال فریزر + ماکروویو + گاز</span>
+                                <span class="line-through text-gray-500">۱۴,۲۰۰,۰۰۰ تومان</span>
+                            </div>
+                            <div class="text-2xl font-bold text-green-600">۱۱,۵۰۰,۰۰۰ تومان</div>
+                            <div class="text-green-600 font-bold">۱۹٪ تخفیف</div>
+                        </div>
+                        <button class="w-full bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition-colors">
+                            خرید پکیج
+                        </button>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl shadow-lg p-6 card-hover">
+                        <h3 class="text-xl font-bold mb-4">پکیج نظافت خانه</h3>
+                        <div class="space-y-2 mb-4">
+                            <div class="flex justify-between">
+                                <span>جاروبرقی + ماشین لباسشویی + اتو</span>
+                                <span class="line-through text-gray-500">۱۴,۵۵۰,۰۰۰ تومان</span>
+                            </div>
+                            <div class="text-2xl font-bold text-green-600">۱۲,۸۰۰,۰۰۰ تومان</div>
+                            <div class="text-green-600 font-bold">۱۲٪ تخفیف</div>
+                        </div>
+                        <button class="w-full bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition-colors">
+                            خرید پکیج
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Blog Page -->
+    <div id="blogPage" class="page">
+        <div class="container mx-auto px-4 py-8">
+            <h1 class="text-3xl font-bold text-center mb-8">وبلاگ الماس</h1>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden card-hover">
+                    <div class="h-48 bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center">
+                        <div class="text-6xl">📱</div>
+                    </div>
+                    <div class="p-6">
+                        <div class="text-sm text-gray-500 mb-2">۱۵ آذر ۱۴۰۳</div>
+                        <h3 class="text-xl font-bold mb-3">راهنمای خرید تلویزیون هوشمند</h3>
+                        <p class="text-gray-600 mb-4">نکات مهم برای انتخاب بهترین تلویزیون متناسب با نیازتان و بودجه‌تان...</p>
+                        <button class="text-purple-600 font-bold hover:underline">ادامه مطلب</button>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden card-hover">
+                    <div class="h-48 bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center">
+                        <div class="text-6xl">❄️</div>
+                    </div>
+                    <div class="p-6">
+                        <div class="text-sm text-gray-500 mb-2">۱۲ آذر ۱۴۰۳</div>
+                        <h3 class="text-xl font-bold mb-3">نگهداری صحیح از یخچال فریزر</h3>
+                        <p class="text-gray-600 mb-4">روش‌های مراقبت از یخچال برای افزایش عمر مفید و کاهش مصرف برق...</p>
+                        <button class="text-purple-600 font-bold hover:underline">ادامه مطلب</button>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden card-hover">
+                    <div class="h-48 bg-gradient-to-br from-purple-400 to-purple-600 flex items-center justify-center">
+                        <div class="text-6xl">🏠</div>
+                    </div>
+                    <div class="p-6">
+                        <div class="text-sm text-gray-500 mb-2">۱۰ آذر ۱۴۰۳</div>
+                        <h3 class="text-xl font-bold mb-3">خانه هوشمند با بودجه محدود</h3>
+                        <p class="text-gray-600 mb-4">چگونه با کمترین هزینه خانه‌تان را به یک خانه هوشمند تبدیل کنید...</p>
+                        <button class="text-purple-600 font-bold hover:underline">ادامه مطلب</button>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden card-hover">
+                    <div class="h-48 bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center">
+                        <div class="text-6xl">🌀</div>
+                    </div>
+                    <div class="p-6">
+                        <div class="text-sm text-gray-500 mb-2">۸ آذر ۱۴۰۳</div>
+                        <h3 class="text-xl font-bold mb-3">بهترین زمان خرید لوازم خانگی</h3>
+                        <p class="text-gray-600 mb-4">در چه زمان‌هایی از سال می‌توانید بهترین قیمت‌ها را پیدا کنید...</p>
+                        <button class="text-purple-600 font-bold hover:underline">ادامه مطلب</button>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden card-hover">
+                    <div class="h-48 bg-gradient-to-br from-red-400 to-red-600 flex items-center justify-center">
+                        <div class="text-6xl">🔧</div>
+                    </div>
+                    <div class="p-6">
+                        <div class="text-sm text-gray-500 mb-2">۵ آذر ۱۴۰۳</div>
+                        <h3 class="text-xl font-bold mb-3">تعمیر و نگهداری لوازم خانگی</h3>
+                        <p class="text-gray-600 mb-4">نکات طلایی برای افزایش عمر لوازم خانگی و جلوگیری از خرابی...</p>
+                        <button class="text-purple-600 font-bold hover:underline">ادامه مطلب</button>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden card-hover">
+                    <div class="h-48 bg-gradient-to-br from-teal-400 to-teal-600 flex items-center justify-center">
+                        <div class="text-6xl">💡</div>
+                    </div>
+                    <div class="p-6">
+                        <div class="text-sm text-gray-500 mb-2">۳ آذر ۱۴۰۳</div>
+                        <h3 class="text-xl font-bold mb-3">صرفه‌جویی در مصرف برق</h3>
+                        <p class="text-gray-600 mb-4">روش‌های کاهش مصرف برق با استفاده صحیح از لوازم خانگی...</p>
+                        <button class="text-purple-600 font-bold hover:underline">ادامه مطلب</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Newsletter -->
+            <div class="bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-xl p-8 mt-12 text-center">
+                <h2 class="text-2xl font-bold mb-4">عضویت در خبرنامه</h2>
+                <p class="mb-6">از آخرین مقالات و پیشنهادات ویژه باخبر شوید</p>
+                <form onsubmit="subscribeNewsletter(event)" class="flex max-w-md mx-auto">
+                    <input type="email" placeholder="ایمیل شما" class="flex-1 px-4 py-3 rounded-r-lg text-gray-800 focus:outline-none" required>
+                    <button type="submit" class="bg-white text-purple-600 px-6 py-3 rounded-l-lg font-bold hover:bg-gray-100 transition-colors">
+                        عضویت
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Detail Page -->
+    <div id="productDetailPage" class="page">
+        <div class="container mx-auto px-4 py-8">
+            <!-- Breadcrumb -->
+            <nav class="mb-6">
+                <div class="flex items-center space-x-2 space-x-reverse text-sm text-gray-600">
+                    <a href="#" onclick="showPage('home')" class="hover:text-purple-600">خانه</a>
+                    <i class="fas fa-chevron-left text-xs"></i>
+                    <a href="#" onclick="showPage('products')" class="hover:text-purple-600">محصولات</a>
+                    <i class="fas fa-chevron-left text-xs"></i>
+                    <span id="productBreadcrumb" class="text-purple-600">محصول</span>
+                </div>
+            </nav>
+
+            <div id="productDetailContent">
+                <!-- Product detail content will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Contact Page -->
+    <div id="contactPage" class="page">
+        <div class="container mx-auto px-4 py-8">
+            <h1 class="text-3xl font-bold text-center mb-8">تماس با ما</h1>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="bg-white p-8 rounded-xl shadow-lg">
+                    <h3 class="text-xl font-bold mb-6">فرم تماس</h3>
+                    <form onsubmit="submitContact(event)">
+                        <div class="mb-4">
+                            <label class="block text-gray-700 mb-2">نام و نام خانوادگی</label>
+                            <input type="text" class="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500" required>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="block text-gray-700 mb-2">ایمیل</label>
+                            <input type="email" class="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500" required>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="block text-gray-700 mb-2">موضوع</label>
+                            <input type="text" class="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500" required>
+                        </div>
+                        
+                        <div class="mb-6">
+                            <label class="block text-gray-700 mb-2">پیام</label>
+                            <textarea rows="4" class="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500" required></textarea>
+                        </div>
+                        
+                        <button type="submit" class="w-full bg-purple-600 text-white py-3 rounded-lg hover:bg-purple-700 transition-colors">
+                            ارسال پیام
+                        </button>
+                    </form>
+                </div>
+                
+                <div class="space-y-6">
+                    <div class="bg-white p-6 rounded-xl shadow-lg card-hover">
+                        <div class="flex items-center mb-4">
+                            <div class="bg-purple-100 p-3 rounded-full ml-4">
+                                <i class="fas fa-phone text-purple-600"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold">تلفن تماس</h4>
+                                <p class="text-gray-600">۰۲۱-۱۲۳۴۵۶۷۸</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white p-6 rounded-xl shadow-lg card-hover">
+                        <div class="flex items-center mb-4">
+                            <div class="bg-blue-100 p-3 rounded-full ml-4">
+                                <i class="fas fa-envelope text-blue-600"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold">ایمیل</h4>
+                                <p class="text-gray-600">info@almas-shop.com</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white p-6 rounded-xl shadow-lg card-hover">
+                        <div class="flex items-center mb-4">
+                            <div class="bg-green-100 p-3 rounded-full ml-4">
+                                <i class="fas fa-map-marker-alt text-green-600"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold">آدرس</h4>
+                                <p class="text-gray-600">تهران، خیابان ولیعصر، پلاک ۱۲۳</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal fixed inset-0 bg-black bg-opacity-50 items-center justify-center z-50">
+        <div class="bg-white p-8 rounded-xl shadow-2xl max-w-md w-full mx-4 animate-fadeInUp">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-2xl font-bold">ورود / ثبت نام</h3>
+                <button onclick="hideModal('loginModal')" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="mb-6">
+                <div class="flex border-b">
+                    <button onclick="switchTab('login')" id="loginTab" class="flex-1 py-2 text-center border-b-2 border-purple-600 text-purple-600 font-bold">
+                        ورود
+                    </button>
+                    <button onclick="switchTab('register')" id="registerTab" class="flex-1 py-2 text-center text-gray-500">
+                        ثبت نام
+                    </button>
+                </div>
+            </div>
+            
+            <form id="loginForm" onsubmit="handleLogin(event)">
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2">ایمیل یا شماره موبایل</label>
+                    <input type="text" class="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500" required>
+                </div>
+                
+                <div class="mb-6">
+                    <label class="block text-gray-700 mb-2">رمز عبور</label>
+                    <input type="password" class="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500" required>
+                </div>
+                
+                <button type="submit" class="w-full bg-purple-600 text-white py-3 rounded-lg hover:bg-purple-700 transition-colors mb-4">
+                    ورود
+                </button>
+                
+                <div class="text-center">
+                    <a href="#" class="text-purple-600 hover:underline">رمز عبور را فراموش کرده‌اید؟</a>
+                </div>
+            </form>
+            
+            <form id="registerForm" style="display: none;" onsubmit="handleRegister(event)">
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2">نام و نام خانوادگی</label>
+                    <input type="text" class="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500" required>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2">ایمیل</label>
+                    <input type="email" class="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500" required>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2">شماره موبایل</label>
+                    <input type="tel" class="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500" required>
+                </div>
+                
+                <div class="mb-6">
+                    <label class="block text-gray-700 mb-2">رمز عبور</label>
+                    <input type="password" class="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500" required>
+                </div>
+                
+                <button type="submit" class="w-full bg-purple-600 text-white py-3 rounded-lg hover:bg-purple-700 transition-colors">
+                    ثبت نام
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Checkout Modal -->
+    <div id="checkoutModal" class="modal fixed inset-0 bg-black bg-opacity-50 items-center justify-center z-50">
+        <div class="bg-white p-8 rounded-xl shadow-2xl max-w-2xl w-full mx-4 animate-fadeInUp">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-2xl font-bold">تکمیل خرید</h3>
+                <button onclick="hideModal('checkoutModal')" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
+                <div class="flex items-center">
+                    <i class="fas fa-info-circle text-yellow-600 ml-2"></i>
+                    <span class="text-yellow-800">این یک نمونه آزمایشی است و پرداخت واقعی انجام نمی‌شود</span>
+                </div>
+            </div>
+            
+            <form onsubmit="processCheckout(event)">
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <h4 class="font-bold mb-4">اطلاعات ارسال</h4>
+                        
+                        <div class="mb-4">
+                            <label class="block text-gray-700 mb-2">نام و نام خانوادگی</label>
+                            <input type="text" class="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500" required>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="block text-gray-700 mb-2">شماره موبایل</label>
+                            <input type="tel" class="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500" required>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="block text-gray-700 mb-2">آدرس کامل</label>
+                            <textarea rows="3" class="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500" required></textarea>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h4 class="font-bold mb-4">روش پرداخت</h4>
+                        
+                        <div class="space-y-3 mb-6">
+                            <label class="flex items-center">
+                                <input type="radio" name="payment" value="online" class="ml-2" checked>
+                                <span>پرداخت آنلاین</span>
+                            </label>
+                            
+                            <label class="flex items-center">
+                                <input type="radio" name="payment" value="cash" class="ml-2">
+                                <span>پرداخت در محل</span>
+                            </label>
+                        </div>
+                        
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <h5 class="font-bold mb-2">خلاصه سفارش</h5>
+                            <div class="space-y-1 text-sm">
+                                <div class="flex justify-between">
+                                    <span>جمع کل:</span>
+                                    <span id="checkoutSubtotal">۰ تومان</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span>هزینه ارسال:</span>
+                                    <span>۳۰,۰۰۰ تومان</span>
+                                </div>
+                                <hr>
+                                <div class="flex justify-between font-bold">
+                                    <span>مجموع:</span>
+                                    <span id="checkoutTotal">۰ تومان</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="flex space-x-4 space-x-reverse mt-6">
+                    <button type="button" onclick="hideModal('checkoutModal')" class="flex-1 bg-gray-300 text-gray-700 py-3 rounded-lg hover:bg-gray-400 transition-colors">
+                        انصراف
+                    </button>
+                    <button type="submit" class="flex-1 bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition-colors">
+                        تایید و پرداخت
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8 md:py-12 mt-8 md:mt-16">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 mobile-footer">
+                <div class="sm:col-span-2 lg:col-span-1">
+                    <h3 class="text-lg md:text-xl font-bold mb-4">💎 الماس</h3>
+                    <p class="text-gray-300 mb-4 text-sm md:text-base">فروشگاه معتبر لوازم خانگی با بیش از ۱۰ سال تجربه</p>
+                    <div class="flex space-x-4 space-x-reverse">
+                        <a href="#" class="text-gray-300 hover:text-white transition-colors text-lg">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="text-gray-300 hover:text-white transition-colors text-lg">
+                            <i class="fab fa-telegram"></i>
+                        </a>
+                        <a href="#" class="text-gray-300 hover:text-white transition-colors text-lg">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold mb-4 text-base md:text-lg">دسترسی سریع</h4>
+                    <ul class="space-y-2 text-sm md:text-base">
+                        <li><a href="#" onclick="showPage('home')" class="text-gray-300 hover:text-white transition-colors">خانه</a></li>
+                        <li><a href="#" onclick="showPage('products')" class="text-gray-300 hover:text-white transition-colors">محصولات</a></li>
+                        <li><a href="#" onclick="showPage('brands')" class="text-gray-300 hover:text-white transition-colors">برندها</a></li>
+                        <li><a href="#" onclick="showPage('offers')" class="text-gray-300 hover:text-white transition-colors">پیشنهادات</a></li>
+                        <li><a href="#" onclick="showPage('blog')" class="text-gray-300 hover:text-white transition-colors">وبلاگ</a></li>
+                        <li><a href="#" onclick="showPage('about')" class="text-gray-300 hover:text-white transition-colors">درباره ما</a></li>
+                        <li><a href="#" onclick="showPage('contact')" class="text-gray-300 hover:text-white transition-colors">تماس با ما</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold mb-4 text-base md:text-lg">خدمات مشتریان</h4>
+                    <ul class="space-y-2 text-sm md:text-base">
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors">راهنمای خرید</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors">شرایط استفاده</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors">حریم خصوصی</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors">پشتیبانی</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold mb-4 text-base md:text-lg">اطلاعات تماس</h4>
+                    <div class="space-y-2 text-gray-300 text-sm md:text-base">
+                        <p><i class="fas fa-phone ml-2"></i>۰۲۱-۱۲۳۴۵۶۷۸</p>
+                        <p><i class="fas fa-envelope ml-2"></i>info@almas-shop.com</p>
+                        <p><i class="fas fa-map-marker-alt ml-2"></i>تهران، خیابان ولیعصر</p>
+                    </div>
+                </div>
+            </div>
+            
+            <hr class="my-6 md:my-8 border-gray-700">
+            
+            <div class="text-center text-gray-300 text-sm md:text-base">
+                <p>&copy; ۱۴۰۳ فروشگاه الماس. تمامی حقوق محفوظ است.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Sample products data
+        const products = [
+            // Kitchen appliances
+            {
+                id: 1,
+                name: 'ماکروویو سامسونگ MS23K3513AS',
+                price: 2500000,
+                category: 'kitchen',
+                image: 'https://images.unsplash.com/photo-1574269909862-7e1d70bb8078?w=400&h=300&fit=crop',
+                description: 'ماکروویو ۲۳ لیتری با تکنولوژی پیشرفته',
+                brand: 'سامسونگ',
+                model: 'MS23K3513AS',
+                warranty: '۲ سال گارانتی شرکتی',
+                rating: 4.5,
+                reviewCount: 127,
+                inStock: true,
+                features: [
+                    'ظرفیت ۲۳ لیتری مناسب خانواده ۴ نفره',
+                    'قدرت ۸۰۰ وات برای پخت سریع',
+                    'تکنولوژی سرامیک ایمیل برای تمیزکاری آسان',
+                    '۶ سطح قدرت قابل تنظیم',
+                    'تایمر دیجیتال تا ۹۹ دقیقه',
+                    'قفل ایمنی کودک',
+                    'صفحه نمایش LED',
+                    'دکمه‌های لمسی'
+                ],
+                specifications: {
+                    'ظرفیت': '۲۳ لیتر',
+                    'قدرت': '۸۰۰ وات',
+                    'ابعاد': '۴۸.۹ × ۲۷.۵ × ۳۹.۲ سانتی‌متر',
+                    'وزن': '۱۱.۲ کیلوگرم',
+                    'رنگ': 'نقره‌ای',
+                    'نوع کنترل': 'دیجیتال',
+                    'مصرف برق': '۱۱۵۰ وات'
+                },
+                gallery: [
+                    'https://images.unsplash.com/photo-1574269909862-7e1d70bb8078?w=600&h=400&fit=crop',
+                    'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=600&h=400&fit=crop',
+                    'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=600&h=400&fit=crop'
+                ]
+            },
+            {
+                id: 4,
+                name: 'یخچال فریزر ایرانی',
+                price: 8500000,
+                category: 'kitchen',
+                image: 'https://images.unsplash.com/photo-1586201375761-83865001e31c?w=400&h=300&fit=crop',
+                description: 'یخچال فریزر ۳۰ فوت با تکنولوژی نوفراست'
+            },
+            {
+                id: 7,
+                name: 'گاز رومیزی اخوان',
+                price: 3200000,
+                category: 'kitchen',
+                image: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=300&fit=crop',
+                description: 'گاز رومیزی ۴ شعله شیشه‌ای'
+            },
+            {
+                id: 8,
+                name: 'آبمیوه‌گیری فیلیپس',
+                price: 850000,
+                category: 'kitchen',
+                image: 'https://images.unsplash.com/photo-1570222094114-d054a817e56b?w=400&h=300&fit=crop',
+                description: 'آبمیوه‌گیری قدرتمند ۸۰۰ وات'
+            },
+            {
+                id: 9,
+                name: 'توستر پارس خزر',
+                price: 450000,
+                category: 'kitchen',
+                image: 'https://images.unsplash.com/photo-1484154218962-a197022b5858?w=400&h=300&fit=crop',
+                description: 'توستر ۲ اسلایس با کنترل دما'
+            },
+            {
+                id: 10,
+                name: 'قهوه‌ساز دلونگی',
+                price: 1200000,
+                category: 'kitchen',
+                image: 'https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=400&h=300&fit=crop',
+                description: 'قهوه‌ساز اسپرسو حرفه‌ای'
+            },
+            {
+                id: 11,
+                name: 'ظرفشویی بوش',
+                price: 18500000,
+                category: 'kitchen',
+                image: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=300&fit=crop',
+                description: 'ظرفشویی ۱۴ نفره با ۶ برنامه شستشو'
+            },
+            {
+                id: 12,
+                name: 'هود آشپزخانه اخوان',
+                price: 2800000,
+                category: 'kitchen',
+                image: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=300&fit=crop',
+                description: 'هود شومینه‌ای ۹۰ سانتی استیل'
+            },
+            {
+                id: 13,
+                name: 'فر برقی پارس خزر',
+                price: 3500000,
+                category: 'kitchen',
+                image: 'https://images.unsplash.com/photo-1574269909862-7e1d70bb8078?w=400&h=300&fit=crop',
+                description: 'فر برقی ۴۵ لیتری با گریل'
+            },
+            {
+                id: 14,
+                name: 'مخلوط‌کن مولینکس',
+                price: 680000,
+                category: 'kitchen',
+                image: 'https://images.unsplash.com/photo-1570222094114-d054a817e56b?w=400&h=300&fit=crop',
+                description: 'مخلوط‌کن ۵ سرعته با کاسه شیشه‌ای'
+            },
+            
+            // Cleaning appliances
+            {
+                id: 2,
+                name: 'جاروبرقی بوش',
+                price: 1800000,
+                category: 'cleaning',
+                image: 'https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=400&h=300&fit=crop',
+                description: 'جاروبرقی قدرتمند با فیلتر HEPA'
+            },
+            {
+                id: 5,
+                name: 'ماشین لباسشویی ال جی',
+                price: 12000000,
+                category: 'cleaning',
+                image: 'https://images.unsplash.com/photo-1626806787461-102c1bfaaea1?w=400&h=300&fit=crop',
+                description: 'ماشین لباسشویی ۸ کیلویی اتوماتیک'
+            },
+            {
+                id: 15,
+                name: 'خشک‌کن لباس سامسونگ',
+                price: 15500000,
+                category: 'cleaning',
+                image: 'https://images.unsplash.com/photo-1626806787461-102c1bfaaea1?w=400&h=300&fit=crop',
+                description: 'خشک‌کن ۹ کیلویی با پمپ حرارتی'
+            },
+            {
+                id: 16,
+                name: 'اتو بخار فیلیپس',
+                price: 750000,
+                category: 'cleaning',
+                image: 'https://images.unsplash.com/photo-1582735689369-4fe89db7114c?w=400&h=300&fit=crop',
+                description: 'اتو بخار ۲۴۰۰ وات ضد چسبندگی'
+            },
+            {
+                id: 17,
+                name: 'جاروشارژی دایسون',
+                price: 4500000,
+                category: 'cleaning',
+                image: 'https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=400&h=300&fit=crop',
+                description: 'جارو شارژی بی‌سیم V8 مدل'
+            },
+            {
+                id: 18,
+                name: 'بخارشوی کارچر',
+                price: 2200000,
+                category: 'cleaning',
+                image: 'https://images.unsplash.com/photo-1582735689369-4fe89db7114c?w=400&h=300&fit=crop',
+                description: 'بخارشوی چندمنظوره برای تمیزکاری'
+            },
+            {
+                id: 19,
+                name: 'ماشین ظرفشویی میله',
+                price: 16800000,
+                category: 'cleaning',
+                image: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=300&fit=crop',
+                description: 'ظرفشویی ۱۲ نفره کلاس A++'
+            },
+            
+            // Electronics
+            {
+                id: 3,
+                name: 'تلویزیون ال جی',
+                price: 15000000,
+                category: 'electronics',
+                image: 'https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?w=400&h=300&fit=crop',
+                description: 'تلویزیون ۵۵ اینچ ۴K هوشمند'
+            },
+            {
+                id: 6,
+                name: 'کولر گازی سپلیت',
+                price: 6500000,
+                category: 'electronics',
+                image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=300&fit=crop',
+                description: 'کولر گازی ۱۸ هزار اینورتر'
+            },
+            {
+                id: 20,
+                name: 'تلویزیون سامسونگ ۷۵ اینچ',
+                price: 35000000,
+                category: 'electronics',
+                image: 'https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?w=400&h=300&fit=crop',
+                description: 'تلویزیون ۷۵ اینچ QLED 8K'
+            },
+            {
+                id: 21,
+                name: 'ساندبار سونی',
+                price: 4200000,
+                category: 'electronics',
+                image: 'https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=400&h=300&fit=crop',
+                description: 'ساندبار ۳.۱ کانال با ساب‌ووفر'
+            },
+            {
+                id: 22,
+                name: 'پخش خانگی پایونیر',
+                price: 2800000,
+                category: 'electronics',
+                image: 'https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=400&h=300&fit=crop',
+                description: 'پخش خانگی ۵.۱ کانال با بلوتوث'
+            },
+            {
+                id: 23,
+                name: 'کولر آبی آبسال',
+                price: 3500000,
+                category: 'electronics',
+                image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=300&fit=crop',
+                description: 'کولر آبی ۵۵۰۰ سلولزی'
+            },
+            {
+                id: 24,
+                name: 'بخاری برقی',
+                price: 850000,
+                category: 'electronics',
+                image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=300&fit=crop',
+                description: 'بخاری برقی ۲۰۰۰ وات فن‌دار'
+            },
+            {
+                id: 25,
+                name: 'آبسردکن پنگوئن',
+                price: 1200000,
+                category: 'electronics',
+                image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=300&fit=crop',
+                description: 'آبسردکن ایستاده سرد و گرم'
+            },
+            
+            // Home & Garden
+            {
+                id: 26,
+                name: 'چراغ LED هوشمند',
+                price: 320000,
+                category: 'home',
+                image: 'https://images.unsplash.com/photo-1524484485831-a92ffc0de03f?w=400&h=300&fit=crop',
+                description: 'چراغ LED کنترل از راه دور'
+            },
+            {
+                id: 27,
+                name: 'پنکه سقفی',
+                price: 1800000,
+                category: 'home',
+                image: 'https://images.unsplash.com/photo-1524484485831-a92ffc0de03f?w=400&h=300&fit=crop',
+                description: 'پنکه سقفی ۵۶ اینچ با ریموت'
+            },
+            {
+                id: 28,
+                name: 'آینه هوشمند',
+                price: 2500000,
+                category: 'home',
+                image: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&h=300&fit=crop',
+                description: 'آینه LED با نور قابل تنظیم'
+            },
+            {
+                id: 29,
+                name: 'گلدان هوشمند',
+                price: 450000,
+                category: 'home',
+                image: 'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=400&h=300&fit=crop',
+                description: 'گلدان خودکار با سنسور رطوبت'
+            },
+            {
+                id: 30,
+                name: 'دوربین امنیتی',
+                price: 1500000,
+                category: 'home',
+                image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop',
+                description: 'دوربین امنیتی وای‌فای ۴K'
+            }
+        ];
+
+        let cart = [];
+        let currentFilter = '';
+        let currentSearchTerm = '';
+
+        // Sample reviews data
+        const reviews = {
+            1: [
+                {
+                    id: 1,
+                    userName: 'احمد محمدی',
+                    rating: 5,
+                    date: '۱۵ آذر ۱۴۰۳',
+                    comment: 'ماکروویو فوق‌العاده‌ای است. کیفیت ساخت عالی و کارکرد بسیار خوب. پخت غذا خیلی یکنواخت و سریع انجام می‌شود. قیمت هم مناسب بود.',
+                    helpful: 23,
+                    verified: true
+                },
+                {
+                    id: 2,
+                    userName: 'فاطمه کریمی',
+                    rating: 4,
+                    date: '۱۰ آذر ۱۴۰۳',
+                    comment: 'خرید خوبی بود. فقط صدای کمی بلند دارد ولی در کل راضی هستم. تمیز کردنش راحت است.',
+                    helpful: 15,
+                    verified: true
+                },
+                {
+                    id: 3,
+                    userName: 'علی رضایی',
+                    rating: 5,
+                    date: '۵ آذر ۱۴۰۳',
+                    comment: 'بهترین ماکروویو که تا حالا استفاده کردم. کیفیت سامسونگ همیشه قابل اعتماد بوده. پیشنهاد می‌کنم.',
+                    helpful: 31,
+                    verified: true
+                },
+                {
+                    id: 4,
+                    userName: 'مریم احمدی',
+                    rating: 4,
+                    date: '۲ آذر ۱۴۰۳',
+                    comment: 'محصول خوبی است. ظرفیت مناسب برای خانواده ۴ نفره. فقط کاش قیمت کمتر بود.',
+                    helpful: 8,
+                    verified: false
+                }
+            ]
+        };
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+            loadFeaturedProducts();
+            loadAllProducts();
+            loadOffersPage();
+            updateCartDisplay();
+        });
+
+        // Page navigation
+        function showPage(pageId) {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // Show selected page
+            document.getElementById(pageId + 'Page').classList.add('active');
+            
+            // Update cart display when showing cart page
+            if (pageId === 'cart') {
+                displayCartItems();
+            }
+        }
+
+        // Modal functions
+        function showModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+        }
+
+        function hideModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        // Mobile menu functions
+        function openMobileMenu() {
+            document.getElementById('mobileMenu').classList.add('active');
+            document.getElementById('mobileMenuOverlay').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMobileMenu() {
+            document.getElementById('mobileMenu').classList.remove('active');
+            document.getElementById('mobileMenuOverlay').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Handle mobile search
+        function handleMobileSearch(event) {
+            currentSearchTerm = event.target.value.trim();
+            
+            if (currentSearchTerm && !document.getElementById('productsPage').classList.contains('active')) {
+                showPage('products');
+                closeMobileMenu();
+            }
+            
+            clearTimeout(window.searchTimeout);
+            window.searchTimeout = setTimeout(() => {
+                loadAllProducts();
+                
+                if (currentSearchTerm) {
+                    showNotification(`جستجو برای "${currentSearchTerm}"`);
+                }
+            }, 300);
+        }
+
+        // Load featured products
+        function loadFeaturedProducts() {
+            const container = document.getElementById('featuredProducts');
+            const featuredProducts = products.slice(0, 4);
+            
+            container.innerHTML = featuredProducts.map(product => `
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden card-hover animate-fadeInUp mobile-product-card">
+                    <div class="h-40 md:h-48 overflow-hidden">
+                        <img src="${product.image}" alt="${product.name}" class="w-full h-full object-cover hover:scale-105 transition-transform duration-300" onerror="this.src=''; this.alt='تصویر در دسترس نیست'; this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="w-full h-full bg-gradient-to-br from-purple-100 to-purple-200 flex items-center justify-center text-4xl md:text-6xl animate-bounce-custom" style="display: none;">📦</div>
+                    </div>
+                    <div class="p-4 md:p-6">
+                        <h3 class="font-bold text-sm md:text-lg mb-2 line-clamp-2">${product.name}</h3>
+                        <p class="text-gray-600 text-xs md:text-sm mb-3 md:mb-4 line-clamp-2">${product.description}</p>
+                        <div class="flex flex-col md:flex-row md:justify-between md:items-center space-y-2 md:space-y-0">
+                            <span class="text-lg md:text-xl font-bold text-purple-600">${formatPrice(product.price)} تومان</span>
+                            <div class="flex space-x-2 space-x-reverse mobile-btn-group">
+                                <button onclick="showProductDetail(${product.id})" class="bg-gray-100 text-gray-700 px-2 md:px-3 py-1 md:py-2 rounded-lg hover:bg-gray-200 transition-colors text-xs md:text-sm">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button onclick="addToCart(${product.id})" class="bg-purple-600 text-white px-3 md:px-4 py-1 md:py-2 rounded-lg hover:bg-purple-700 transition-colors text-xs md:text-sm">
+                                    <i class="fas fa-cart-plus ml-1"></i>افزودن
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Load all products
+        function loadAllProducts() {
+            const container = document.getElementById('allProducts');
+            let filteredProducts = products;
+            
+            // Apply category filter
+            if (currentFilter) {
+                filteredProducts = filteredProducts.filter(p => p.category === currentFilter);
+            }
+            
+            // Apply search filter
+            if (currentSearchTerm) {
+                filteredProducts = filteredProducts.filter(p => 
+                    p.name.toLowerCase().includes(currentSearchTerm.toLowerCase()) ||
+                    p.description.toLowerCase().includes(currentSearchTerm.toLowerCase())
+                );
+            }
+            
+            if (filteredProducts.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-4 text-center py-12">
+                        <div class="text-6xl mb-4">🔍</div>
+                        <h3 class="text-xl font-bold mb-2">محصولی یافت نشد</h3>
+                        <p class="text-gray-600 mb-4">متاسفانه محصولی با این مشخصات پیدا نکردیم</p>
+                        <button onclick="clearSearch()" class="bg-purple-600 text-white px-6 py-3 rounded-lg hover:bg-purple-700 transition-colors">
+                            پاک کردن جستجو
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = filteredProducts.map(product => `
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden card-hover animate-fadeInUp mobile-product-card">
+                    <div class="h-40 md:h-48 overflow-hidden">
+                        <img src="${product.image}" alt="${product.name}" class="w-full h-full object-cover hover:scale-105 transition-transform duration-300" onerror="this.src=''; this.alt='تصویر در دسترس نیست'; this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="w-full h-full bg-gradient-to-br from-blue-100 to-blue-200 flex items-center justify-center text-4xl md:text-6xl animate-pulse-custom" style="display: none;">📦</div>
+                    </div>
+                    <div class="p-4 md:p-6">
+                        <h3 class="font-bold text-sm md:text-lg mb-2 line-clamp-2">${product.name}</h3>
+                        <p class="text-gray-600 text-xs md:text-sm mb-3 md:mb-4 line-clamp-2">${product.description}</p>
+                        <div class="flex flex-col md:flex-row md:justify-between md:items-center space-y-2 md:space-y-0">
+                            <span class="text-lg md:text-xl font-bold text-blue-600">${formatPrice(product.price)} تومان</span>
+                            <div class="flex space-x-2 space-x-reverse mobile-btn-group">
+                                <button onclick="showProductDetail(${product.id})" class="bg-gray-100 text-gray-700 px-2 md:px-3 py-1 md:py-2 rounded-lg hover:bg-gray-200 transition-colors text-xs md:text-sm">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button onclick="addToCart(${product.id})" class="bg-blue-600 text-white px-3 md:px-4 py-1 md:py-2 rounded-lg hover:bg-blue-700 transition-colors text-xs md:text-sm">
+                                    <i class="fas fa-cart-plus ml-1"></i>افزودن
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Filter products
+        function filterProducts(category) {
+            currentFilter = category;
+            loadAllProducts();
+        }
+
+        // Add to cart
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            const existingItem = cart.find(item => item.id === productId);
+            
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({...product, quantity: 1});
+            }
+            
+            updateCartDisplay();
+            showNotification('محصول به سبد خرید اضافه شد!');
+        }
+
+        // Remove from cart
+        function removeFromCart(productId) {
+            cart = cart.filter(item => item.id !== productId);
+            updateCartDisplay();
+            displayCartItems();
+        }
+
+        // Update quantity
+        function updateQuantity(productId, change) {
+            const item = cart.find(item => item.id === productId);
+            if (item) {
+                item.quantity += change;
+                if (item.quantity <= 0) {
+                    removeFromCart(productId);
+                } else {
+                    updateCartDisplay();
+                    displayCartItems();
+                }
+            }
+        }
+
+        // Update cart display
+        function updateCartDisplay() {
+            const badge = document.getElementById('cartBadge');
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            badge.textContent = totalItems;
+            
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const shipping = subtotal > 500000 ? 0 : 30000;
+            const total = subtotal + shipping;
+            
+            document.getElementById('subtotal').textContent = formatPrice(subtotal) + ' تومان';
+            document.getElementById('shipping').textContent = formatPrice(shipping) + ' تومان';
+            document.getElementById('total').textContent = formatPrice(total) + ' تومان';
+            document.getElementById('checkoutSubtotal').textContent = formatPrice(subtotal) + ' تومان';
+            document.getElementById('checkoutTotal').textContent = formatPrice(total) + ' تومان';
+        }
+
+        // Display cart items
+        function displayCartItems() {
+            const container = document.getElementById('cartItems');
+            
+            if (cart.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-12">
+                        <div class="text-6xl mb-4">🛒</div>
+                        <h3 class="text-xl font-bold mb-2">سبد خرید شما خالی است</h3>
+                        <p class="text-gray-600 mb-4">برای خرید به صفحه محصولات بروید</p>
+                        <button onclick="showPage('products')" class="bg-purple-600 text-white px-6 py-3 rounded-lg hover:bg-purple-700 transition-colors">
+                            مشاهده محصولات
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = cart.map(item => `
+                <div class="bg-white p-4 md:p-6 rounded-xl shadow-lg flex flex-col md:flex-row md:items-center md:justify-between animate-fadeInUp mobile-cart-item">
+                    <div class="flex items-center mb-4 md:mb-0">
+                        <div class="w-12 h-12 md:w-16 md:h-16 ml-3 md:ml-4 overflow-hidden rounded-lg flex-shrink-0">
+                            <img src="${item.image}" alt="${item.name}" class="w-full h-full object-cover" onerror="this.src=''; this.alt='تصویر در دسترس نیست'; this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center text-xl md:text-2xl" style="display: none;">📦</div>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="font-bold text-sm md:text-lg line-clamp-1">${item.name}</h3>
+                            <p class="text-gray-600 text-xs md:text-sm line-clamp-2">${item.description}</p>
+                            <p class="text-purple-600 font-bold text-sm md:text-base">${formatPrice(item.price)} تومان</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center justify-between md:justify-end md:space-x-4 md:space-x-reverse mobile-cart-controls">
+                        <div class="flex items-center space-x-2 space-x-reverse">
+                            <button onclick="updateQuantity(${item.id}, -1)" class="bg-gray-200 w-8 h-8 rounded-full flex items-center justify-center hover:bg-gray-300 transition-colors">
+                                <i class="fas fa-minus text-sm"></i>
+                            </button>
+                            <span class="w-8 text-center font-bold text-sm md:text-base">${item.quantity}</span>
+                            <button onclick="updateQuantity(${item.id}, 1)" class="bg-gray-200 w-8 h-8 rounded-full flex items-center justify-center hover:bg-gray-300 transition-colors">
+                                <i class="fas fa-plus text-sm"></i>
+                            </button>
+                        </div>
+                        
+                        <button onclick="removeFromCart(${item.id})" class="text-red-500 hover:text-red-700 transition-colors p-2">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Format price
+        function formatPrice(price) {
+            return price.toLocaleString('fa-IR');
+        }
+
+        // Show notification
+        function showNotification(message) {
+            const notification = document.getElementById('notification');
+            const text = document.getElementById('notificationText');
+            
+            text.textContent = message;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        // Tab switching
+        function switchTab(tab) {
+            const loginTab = document.getElementById('loginTab');
+            const registerTab = document.getElementById('registerTab');
+            const loginForm = document.getElementById('loginForm');
+            const registerForm = document.getElementById('registerForm');
+            
+            if (tab === 'login') {
+                loginTab.classList.add('border-b-2', 'border-purple-600', 'text-purple-600', 'font-bold');
+                loginTab.classList.remove('text-gray-500');
+                registerTab.classList.remove('border-b-2', 'border-purple-600', 'text-purple-600', 'font-bold');
+                registerTab.classList.add('text-gray-500');
+                
+                loginForm.style.display = 'block';
+                registerForm.style.display = 'none';
+            } else {
+                registerTab.classList.add('border-b-2', 'border-purple-600', 'text-purple-600', 'font-bold');
+                registerTab.classList.remove('text-gray-500');
+                loginTab.classList.remove('border-b-2', 'border-purple-600', 'text-purple-600', 'font-bold');
+                loginTab.classList.add('text-gray-500');
+                
+                registerForm.style.display = 'block';
+                loginForm.style.display = 'none';
+            }
+        }
+
+        // Handle login
+        function handleLogin(event) {
+            event.preventDefault();
+            showNotification('ورود با موفقیت انجام شد!');
+            hideModal('loginModal');
+        }
+
+        // Handle register
+        function handleRegister(event) {
+            event.preventDefault();
+            showNotification('ثبت نام با موفقیت انجام شد!');
+            hideModal('loginModal');
+        }
+
+        // Handle contact form
+        function submitContact(event) {
+            event.preventDefault();
+            showNotification('پیام شما با موفقیت ارسال شد!');
+            event.target.reset();
+        }
+
+        // Process checkout
+        function processCheckout(event) {
+            event.preventDefault();
+            
+            // Simulate processing
+            const button = event.target.querySelector('button[type="submit"]');
+            const originalText = button.innerHTML;
+            
+            button.innerHTML = '<i class="fas fa-spinner animate-spin ml-2"></i>در حال پردازش...';
+            button.disabled = true;
+            
+            setTimeout(() => {
+                hideModal('checkoutModal');
+                cart = [];
+                updateCartDisplay();
+                showNotification('سفارش شما با موفقیت ثبت شد!');
+                
+                button.innerHTML = originalText;
+                button.disabled = false;
+            }, 2000);
+        }
+
+        // Load offers page content
+        function loadOffersPage() {
+            // Flash sale products
+            const flashSaleProducts = products.slice(0, 4).map(product => ({
+                ...product,
+                originalPrice: product.price,
+                price: Math.floor(product.price * 0.7) // 30% discount
+            }));
+            
+            const flashContainer = document.getElementById('flashSaleProducts');
+            if (flashContainer) {
+                flashContainer.innerHTML = flashSaleProducts.map(product => `
+                    <div class="bg-white rounded-xl shadow-lg overflow-hidden card-hover animate-fadeInUp">
+                        <div class="relative">
+                            <div class="h-48 overflow-hidden">
+                                <img src="${product.image}" alt="${product.name}" class="w-full h-full object-cover hover:scale-105 transition-transform duration-300" onerror="this.src=''; this.alt='تصویر در دسترس نیست'; this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                <div class="w-full h-full bg-gradient-to-br from-red-100 to-red-200 flex items-center justify-center text-6xl animate-pulse-custom" style="display: none;">📦</div>
+                            </div>
+                            <div class="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 rounded-full text-sm font-bold">
+                                ۳۰٪ تخفیف
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="font-bold text-lg mb-2">${product.name}</h3>
+                            <div class="mb-4">
+                                <span class="text-lg line-through text-gray-500">${formatPrice(product.originalPrice)} تومان</span>
+                                <span class="text-xl font-bold text-red-600 block">${formatPrice(product.price)} تومان</span>
+                            </div>
+                            <button onclick="addToCart(${product.id})" class="w-full bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors">
+                                <i class="fas fa-cart-plus ml-1"></i>افزودن به سبد
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+            
+            // Daily deals
+            const dailyDeals = products.slice(4, 7).map(product => ({
+                ...product,
+                originalPrice: product.price,
+                price: Math.floor(product.price * 0.85) // 15% discount
+            }));
+            
+            const dailyContainer = document.getElementById('dailyDeals');
+            if (dailyContainer) {
+                dailyContainer.innerHTML = dailyDeals.map(product => `
+                    <div class="bg-white rounded-xl shadow-lg overflow-hidden card-hover animate-slideInRight">
+                        <div class="relative">
+                            <div class="h-48 overflow-hidden">
+                                <img src="${product.image}" alt="${product.name}" class="w-full h-full object-cover hover:scale-105 transition-transform duration-300" onerror="this.src=''; this.alt='تصویر در دسترس نیست'; this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                <div class="w-full h-full bg-gradient-to-br from-green-100 to-green-200 flex items-center justify-center text-6xl animate-bounce-custom" style="display: none;">📦</div>
+                            </div>
+                            <div class="absolute top-2 right-2 bg-green-500 text-white px-2 py-1 rounded-full text-sm font-bold">
+                                ۱۵٪ تخفیف
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="font-bold text-lg mb-2">${product.name}</h3>
+                            <div class="mb-4">
+                                <span class="text-lg line-through text-gray-500">${formatPrice(product.originalPrice)} تومان</span>
+                                <span class="text-xl font-bold text-green-600 block">${formatPrice(product.price)} تومان</span>
+                            </div>
+                            <button onclick="addToCart(${product.id})" class="w-full bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors">
+                                <i class="fas fa-cart-plus ml-1"></i>افزودن به سبد
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        // Newsletter subscription
+        function subscribeNewsletter(event) {
+            event.preventDefault();
+            showNotification('با موفقیت در خبرنامه عضو شدید!');
+            event.target.reset();
+        }
+
+        // Handle search
+        function handleSearch(event) {
+            currentSearchTerm = event.target.value.trim();
+            
+            // Auto-switch to products page if searching
+            if (currentSearchTerm && !document.getElementById('productsPage').classList.contains('active')) {
+                showPage('products');
+            }
+            
+            // Debounce search to avoid too many calls
+            clearTimeout(window.searchTimeout);
+            window.searchTimeout = setTimeout(() => {
+                loadAllProducts();
+                
+                if (currentSearchTerm) {
+                    showNotification(`جستجو برای "${currentSearchTerm}"`);
+                }
+            }, 300);
+        }
+
+        // Clear search
+        function clearSearch() {
+            currentSearchTerm = '';
+            currentFilter = '';
+            document.getElementById('searchInput').value = '';
+            document.querySelector('select[onchange="filterProducts(this.value)"]').value = '';
+            loadAllProducts();
+            showNotification('جستجو پاک شد');
+        }
+
+        // Show product detail
+        function showProductDetail(productId) {
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
+
+            // Update breadcrumb
+            document.getElementById('productBreadcrumb').textContent = product.name;
+
+            // Load product detail content
+            const container = document.getElementById('productDetailContent');
+            const productReviews = reviews[productId] || [];
+            const similarProducts = products.filter(p => p.category === product.category && p.id !== productId).slice(0, 4);
+
+            container.innerHTML = `
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 mb-8 md:mb-12 mobile-product-detail">
+                    <!-- Product Images -->
+                    <div>
+                        <div class="mb-4">
+                            <img id="mainProductImage" src="${product.image}" alt="${product.name}" class="w-full h-64 md:h-96 object-cover rounded-xl shadow-lg" onerror="this.src=''; this.alt='تصویر در دسترس نیست'; this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="w-full h-64 md:h-96 bg-gradient-to-br from-purple-100 to-purple-200 flex items-center justify-center text-6xl md:text-8xl animate-pulse-custom rounded-xl shadow-lg" style="display: none;">📦</div>
+                        </div>
+                        ${product.gallery ? `
+                        <div class="flex space-x-2 space-x-reverse overflow-x-auto pb-2">
+                            ${product.gallery.map((img, index) => `
+                                <img src="${img}" alt="${product.name} ${index + 1}" class="w-16 h-16 md:w-20 md:h-20 object-cover rounded-lg cursor-pointer hover:opacity-75 transition-opacity flex-shrink-0" onclick="changeMainImage('${img}')" onerror="this.style.display='none';">
+                            `).join('')}
+                        </div>
+                        ` : ''}
+                    </div>
+
+                    <!-- Product Info -->
+                    <div>
+                        <div class="mb-4">
+                            <h1 class="text-xl md:text-3xl font-bold mb-2">${product.name}</h1>
+                            <div class="flex flex-col md:flex-row md:items-center mb-4 space-y-2 md:space-y-0">
+                                <div class="flex items-center md:ml-4">
+                                    ${generateStars(product.rating || 4)}
+                                    <span class="mr-2 text-gray-600 text-sm">(${product.reviewCount || 0} نظر)</span>
+                                </div>
+                                <span class="text-sm text-gray-500">برند: ${product.brand || 'نامشخص'}</span>
+                            </div>
+                        </div>
+
+                        <div class="mb-6">
+                            <div class="text-2xl md:text-3xl font-bold text-purple-600 mb-2">${formatPrice(product.price)} تومان</div>
+                            <div class="flex flex-col md:flex-row md:items-center mb-4 space-y-2 md:space-y-0">
+                                ${product.inStock !== false ? 
+                                    '<span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm w-fit"><i class="fas fa-check ml-1"></i>موجود در انبار</span>' :
+                                    '<span class="bg-red-100 text-red-800 px-3 py-1 rounded-full text-sm w-fit"><i class="fas fa-times ml-1"></i>ناموجود</span>'
+                                }
+                                <span class="md:mr-4 text-sm text-gray-600">${product.warranty || 'گارانتی نامشخص'}</span>
+                            </div>
+                        </div>
+
+                        <div class="mb-6">
+                            <h3 class="font-bold mb-3 text-base md:text-lg">ویژگی‌های کلیدی:</h3>
+                            <ul class="space-y-2">
+                                ${(product.features || []).map(feature => `
+                                    <li class="flex items-start">
+                                        <i class="fas fa-check text-green-500 ml-2 mt-1 text-sm"></i>
+                                        <span class="text-sm md:text-base">${feature}</span>
+                                    </li>
+                                `).join('')}
+                            </ul>
+                        </div>
+
+                        <div class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-4 md:space-x-reverse mb-6">
+                            <button onclick="addToCart(${product.id})" class="flex-1 bg-purple-600 text-white py-3 px-4 md:px-6 rounded-lg hover:bg-purple-700 transition-colors font-bold text-sm md:text-base">
+                                <i class="fas fa-cart-plus ml-2"></i>افزودن به سبد خرید
+                            </button>
+                            <button class="bg-gray-100 text-gray-700 py-3 px-4 md:px-6 rounded-lg hover:bg-gray-200 transition-colors">
+                                <i class="fas fa-heart"></i>
+                            </button>
+                            <button class="bg-gray-100 text-gray-700 py-3 px-4 md:px-6 rounded-lg hover:bg-gray-200 transition-colors">
+                                <i class="fas fa-share-alt"></i>
+                            </button>
+                        </div>
+
+                        <div class="bg-blue-50 p-4 rounded-lg">
+                            <h4 class="font-bold mb-2 text-sm md:text-base">خدمات ویژه:</h4>
+                            <ul class="text-xs md:text-sm space-y-1">
+                                <li><i class="fas fa-truck text-blue-600 ml-2"></i>ارسال رایگان برای خریدهای بالای ۵۰۰ هزار تومان</li>
+                                <li><i class="fas fa-undo text-blue-600 ml-2"></i>۷ روز ضمانت بازگشت کالا</li>
+                                <li><i class="fas fa-tools text-blue-600 ml-2"></i>نصب و راه‌اندازی رایگان</li>
+                                <li><i class="fas fa-headset text-blue-600 ml-2"></i>پشتیبانی ۲۴ ساعته</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product Tabs -->
+                <div class="mb-8 md:mb-12">
+                    <div class="border-b border-gray-200 mb-4 md:mb-6">
+                        <nav class="flex space-x-4 md:space-x-8 space-x-reverse mobile-product-tabs">
+                            <button onclick="switchProductTab('description')" id="descriptionTab" class="py-2 px-1 border-b-2 border-purple-600 text-purple-600 font-bold text-sm md:text-base whitespace-nowrap">
+                                توضیحات
+                            </button>
+                            <button onclick="switchProductTab('specifications')" id="specificationsTab" class="py-2 px-1 text-gray-500 hover:text-gray-700 text-sm md:text-base whitespace-nowrap">
+                                مشخصات فنی
+                            </button>
+                            <button onclick="switchProductTab('reviews')" id="reviewsTab" class="py-2 px-1 text-gray-500 hover:text-gray-700 text-sm md:text-base whitespace-nowrap">
+                                نظرات (${productReviews.length})
+                            </button>
+                        </nav>
+                    </div>
+
+                    <!-- Description Tab -->
+                    <div id="descriptionContent" class="tab-content">
+                        <div class="bg-white p-6 rounded-xl shadow-lg">
+                            <h3 class="text-xl font-bold mb-4">درباره محصول</h3>
+                            <p class="text-gray-700 leading-relaxed mb-4">
+                                ${product.description} این محصول با استفاده از بهترین مواد اولیه و تکنولوژی روز دنیا تولید شده است. 
+                                طراحی زیبا و کارکرد عالی آن، تجربه‌ای بی‌نظیر را برای شما فراهم می‌کند.
+                            </p>
+                            <p class="text-gray-700 leading-relaxed mb-4">
+                                این دستگاه دارای گواهینامه‌های بین‌المللی کیفیت بوده و تمامی استانداردهای ایمنی را رعایت می‌کند. 
+                                مصرف انرژی بهینه و عملکرد بی‌صدا از ویژگی‌های بارز این محصول محسوب می‌شود.
+                            </p>
+                            <div class="grid md:grid-cols-2 gap-6 mt-6">
+                                <div>
+                                    <h4 class="font-bold mb-3">مزایای کلیدی:</h4>
+                                    <ul class="space-y-2 text-sm">
+                                        <li class="flex items-center"><i class="fas fa-star text-yellow-500 ml-2"></i>کیفیت ساخت برتر</li>
+                                        <li class="flex items-center"><i class="fas fa-star text-yellow-500 ml-2"></i>طراحی مدرن و زیبا</li>
+                                        <li class="flex items-center"><i class="fas fa-star text-yellow-500 ml-2"></i>مصرف انرژی کم</li>
+                                        <li class="flex items-center"><i class="fas fa-star text-yellow-500 ml-2"></i>عملکرد بی‌صدا</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold mb-3">کاربردها:</h4>
+                                    <ul class="space-y-2 text-sm">
+                                        <li class="flex items-center"><i class="fas fa-home text-blue-500 ml-2"></i>مناسب برای خانه</li>
+                                        <li class="flex items-center"><i class="fas fa-building text-blue-500 ml-2"></i>مناسب برای اداره</li>
+                                        <li class="flex items-center"><i class="fas fa-users text-blue-500 ml-2"></i>استفاده خانوادگی</li>
+                                        <li class="flex items-center"><i class="fas fa-clock text-blue-500 ml-2"></i>استفاده روزانه</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Specifications Tab -->
+                    <div id="specificationsContent" class="tab-content" style="display: none;">
+                        <div class="bg-white p-6 rounded-xl shadow-lg">
+                            <h3 class="text-xl font-bold mb-4">مشخصات فنی</h3>
+                            <div class="grid md:grid-cols-2 gap-6">
+                                ${product.specifications ? Object.entries(product.specifications).map(([key, value]) => `
+                                    <div class="flex justify-between py-3 border-b border-gray-100">
+                                        <span class="font-medium text-gray-700">${key}:</span>
+                                        <span class="text-gray-900">${value}</span>
+                                    </div>
+                                `).join('') : '<p class="text-gray-500">مشخصات فنی در دسترس نیست</p>'}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Reviews Tab -->
+                    <div id="reviewsContent" class="tab-content" style="display: none;">
+                        <div class="space-y-6">
+                            <!-- Review Summary -->
+                            <div class="bg-white p-6 rounded-xl shadow-lg">
+                                <div class="grid md:grid-cols-2 gap-6">
+                                    <div class="text-center">
+                                        <div class="text-4xl font-bold text-purple-600 mb-2">${product.rating || 4.0}</div>
+                                        <div class="flex justify-center mb-2">
+                                            ${generateStars(product.rating || 4)}
+                                        </div>
+                                        <p class="text-gray-600">از ${productReviews.length} نظر</p>
+                                    </div>
+                                    <div class="space-y-2">
+                                        ${[5,4,3,2,1].map(star => {
+                                            const count = productReviews.filter(r => r.rating === star).length;
+                                            const percentage = productReviews.length > 0 ? (count / productReviews.length) * 100 : 0;
+                                            return `
+                                                <div class="flex items-center">
+                                                    <span class="text-sm w-8">${star} ⭐</span>
+                                                    <div class="flex-1 bg-gray-200 rounded-full h-2 mx-2">
+                                                        <div class="bg-yellow-400 h-2 rounded-full" style="width: ${percentage}%"></div>
+                                                    </div>
+                                                    <span class="text-sm text-gray-600 w-8">${count}</span>
+                                                </div>
+                                            `;
+                                        }).join('')}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Add Review Form -->
+                            <div class="bg-white p-6 rounded-xl shadow-lg">
+                                <h4 class="font-bold mb-4">نظر خود را بنویسید</h4>
+                                <form onsubmit="submitReview(event, ${product.id})">
+                                    <div class="mb-4">
+                                        <label class="block text-gray-700 mb-2">امتیاز شما:</label>
+                                        <div class="flex space-x-1 space-x-reverse">
+                                            ${[1,2,3,4,5].map(star => `
+                                                <button type="button" onclick="setRating(${star})" class="rating-star text-2xl text-gray-300 hover:text-yellow-400 transition-colors">⭐</button>
+                                            `).join('')}
+                                        </div>
+                                        <input type="hidden" id="reviewRating" value="5">
+                                    </div>
+                                    <div class="mb-4">
+                                        <label class="block text-gray-700 mb-2">نظر شما:</label>
+                                        <textarea rows="4" class="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500" placeholder="نظر خود را در مورد این محصول بنویسید..." required></textarea>
+                                    </div>
+                                    <button type="submit" class="bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700 transition-colors">
+                                        ثبت نظر
+                                    </button>
+                                </form>
+                            </div>
+
+                            <!-- Reviews List -->
+                            <div class="space-y-4">
+                                ${productReviews.map(review => `
+                                    <div class="bg-white p-6 rounded-xl shadow-lg">
+                                        <div class="flex justify-between items-start mb-3">
+                                            <div class="flex items-center">
+                                                <div class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center ml-3">
+                                                    <i class="fas fa-user text-purple-600"></i>
+                                                </div>
+                                                <div>
+                                                    <div class="flex items-center">
+                                                        <span class="font-bold ml-2">${review.userName}</span>
+                                                        ${review.verified ? '<span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">خرید تایید شده</span>' : ''}
+                                                    </div>
+                                                    <div class="flex items-center mt-1">
+                                                        ${generateStars(review.rating)}
+                                                        <span class="text-sm text-gray-500 mr-2">${review.date}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <p class="text-gray-700 mb-3">${review.comment}</p>
+                                        <div class="flex items-center text-sm text-gray-500">
+                                            <button class="hover:text-purple-600 transition-colors">
+                                                <i class="fas fa-thumbs-up ml-1"></i>مفید (${review.helpful})
+                                            </button>
+                                            <button class="mr-4 hover:text-purple-600 transition-colors">
+                                                <i class="fas fa-reply ml-1"></i>پاسخ
+                                            </button>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Similar Products -->
+                ${similarProducts.length > 0 ? `
+                <div class="mb-8 md:mb-12">
+                    <h2 class="text-xl md:text-2xl font-bold mb-4 md:mb-6">محصولات مشابه</h2>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mobile-similar-products">
+                        ${similarProducts.map(similar => `
+                            <div class="bg-white rounded-xl shadow-lg overflow-hidden card-hover">
+                                <div class="h-40 md:h-48 overflow-hidden">
+                                    <img src="${similar.image}" alt="${similar.name}" class="w-full h-full object-cover hover:scale-105 transition-transform duration-300" onerror="this.src=''; this.alt='تصویر در دسترس نیست'; this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                    <div class="w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center text-3xl md:text-4xl" style="display: none;">📦</div>
+                                </div>
+                                <div class="p-3 md:p-4">
+                                    <h3 class="font-bold mb-2 text-sm md:text-base line-clamp-2">${similar.name}</h3>
+                                    <div class="flex flex-col md:flex-row md:justify-between md:items-center space-y-2 md:space-y-0">
+                                        <span class="text-base md:text-lg font-bold text-purple-600">${formatPrice(similar.price)} تومان</span>
+                                        <button onclick="showProductDetail(${similar.id})" class="bg-purple-600 text-white px-3 py-2 rounded text-xs md:text-sm hover:bg-purple-700 transition-colors w-full md:w-auto">
+                                            مشاهده
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+                ` : ''}
+            `;
+
+            // Show the product detail page
+            showPage('productDetail');
+        }
+
+        // Generate star rating HTML
+        function generateStars(rating) {
+            const fullStars = Math.floor(rating);
+            const hasHalfStar = rating % 1 !== 0;
+            let starsHtml = '';
+            
+            for (let i = 0; i < fullStars; i++) {
+                starsHtml += '<i class="fas fa-star text-yellow-400"></i>';
+            }
+            
+            if (hasHalfStar) {
+                starsHtml += '<i class="fas fa-star-half-alt text-yellow-400"></i>';
+            }
+            
+            const emptyStars = 5 - Math.ceil(rating);
+            for (let i = 0; i < emptyStars; i++) {
+                starsHtml += '<i class="far fa-star text-yellow-400"></i>';
+            }
+            
+            return starsHtml;
+        }
+
+        // Change main product image
+        function changeMainImage(imageSrc) {
+            document.getElementById('mainProductImage').src = imageSrc;
+        }
+
+        // Switch product tabs
+        function switchProductTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.style.display = 'none';
+            });
+            
+            // Remove active class from all tabs
+            document.querySelectorAll('[id$="Tab"]').forEach(tab => {
+                tab.classList.remove('border-b-2', 'border-purple-600', 'text-purple-600', 'font-bold');
+                tab.classList.add('text-gray-500');
+            });
+            
+            // Show selected tab content
+            document.getElementById(tabName + 'Content').style.display = 'block';
+            
+            // Add active class to selected tab
+            const activeTab = document.getElementById(tabName + 'Tab');
+            activeTab.classList.add('border-b-2', 'border-purple-600', 'text-purple-600', 'font-bold');
+            activeTab.classList.remove('text-gray-500');
+        }
+
+        // Set rating for review
+        function setRating(rating) {
+            document.getElementById('reviewRating').value = rating;
+            
+            // Update star display
+            document.querySelectorAll('.rating-star').forEach((star, index) => {
+                if (index < rating) {
+                    star.classList.remove('text-gray-300');
+                    star.classList.add('text-yellow-400');
+                } else {
+                    star.classList.remove('text-yellow-400');
+                    star.classList.add('text-gray-300');
+                }
+            });
+        }
+
+        // Submit review
+        function submitReview(event, productId) {
+            event.preventDefault();
+            
+            const rating = document.getElementById('reviewRating').value;
+            const comment = event.target.querySelector('textarea').value;
+            
+            // Add review to reviews object (in real app, this would be sent to server)
+            if (!reviews[productId]) {
+                reviews[productId] = [];
+            }
+            
+            reviews[productId].unshift({
+                id: Date.now(),
+                userName: 'کاربر جدید',
+                rating: parseInt(rating),
+                date: 'همین الان',
+                comment: comment,
+                helpful: 0,
+                verified: false
+            });
+            
+            showNotification('نظر شما با موفقیت ثبت شد!');
+            
+            // Refresh the product detail page
+            showProductDetail(productId);
+        }
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9851f89017f35cb0',t:'MTc1ODg4MTQyMC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
